@@ -5,14 +5,13 @@ class Observable {
   }
   subscribe(observer) {
     //call our subscribe with the observer obj
-    this._subscribe(observer);
+    return this._subscribe(observer);
   }
 
   static fromEvent(dom, eventType) {
     return new Observable(observer => {
       const handler = e => observer.next(e);
       dom.addEventListener(eventType, handler);
-
       return {
         unsubscribe() {
           dom.removeEventListener(eventType, handler);
@@ -42,6 +41,31 @@ class Observable {
       });
       //return a reference to our subscription so that the observable that uses
       // map is able to unsubscribe directly from the source observable
+      return subscription;
+    });
+  }
+
+  filter(predicateFunc) {
+    return new Observable(observer => {
+      const subscription = this.subscribe({
+        next(value) {
+          // catches errors from the predicateFunc if any
+          try {
+            if (predicateFunc(value)) {
+              observer.next(value);
+            }
+          } catch (err) {
+            observer.error(err);
+            subscription.unsubscribe();
+          }
+        },
+        error(err) {
+          observer.error(err);
+        },
+        completed() {
+          observer.completed();
+        },
+      });
       return subscription;
     });
   }
