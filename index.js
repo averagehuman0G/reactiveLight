@@ -20,6 +20,32 @@ class Observable {
       };
     });
   }
+
+  map(projectionFunc) {
+    return new Observable(observer => {
+      const subscription = this.subscribe({
+        next(value) {
+          // catches errors from the projectionFunc if any
+          try {
+            let newValue = projectionFunc(value);
+            observer.next(newValue);
+          } catch (err) {
+            observer.error(err);
+            observer.unsubscribe();
+          }
+        },
+        error(err) {
+          observer.error(err);
+        },
+        completed() {
+          observer.completed();
+        },
+      });
+      //return a reference to our subscription so that the observable that uses
+      // map is able to unsubscribe directly from the source observable
+      return subscription;
+    });
+  }
 }
 
 // TEST
