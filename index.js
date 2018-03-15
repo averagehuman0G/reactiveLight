@@ -31,7 +31,7 @@ class Observable {
             observer.next(newValue);
           } catch (err) {
             observer.error(err);
-            observer.unsubscribe();
+            subscription.unsubscribe();
           }
         },
         error(err) {
@@ -47,13 +47,23 @@ class Observable {
     });
   }
 }
-
-// TEST
+//
+// TEST;
+//
 // const div = document.querySelector('div');
 //
 // const divClicks = Observable.fromEvent(div, click);
-// divClicks.subscribe({
-//   next(e) {
-//     console.log(e);
-//   },
-// });
+// divClicks
+//   .map(e => e.clientX)
+//   .filter(clientX => clientX > 50)
+//   .subscribe({
+//     next(data) {
+//       console.log(data);
+//     },
+//     error(err) {
+//       console.log('there was an err');
+//     },
+//     completed() {
+//       console.log('completed');
+//     },
+//   });
