@@ -27,8 +27,7 @@ class Observable {
         next(value) {
           // catches errors from the projectionFunc if any
           try {
-            let newValue = projectionFunc(value);
-            observer.next(newValue);
+            observer.next(projectionFunc(value));
           } catch (err) {
             observer.error(err);
             subscription.unsubscribe();
