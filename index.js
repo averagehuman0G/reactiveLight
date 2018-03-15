@@ -51,7 +51,7 @@ class Observable {
 //
 // const div = document.querySelector('div');
 //
-// const divClicks = Observable.fromEvent(div, click);
+// const divClicks = Observable.fromEvent(div, "click");
 // divClicks
 //   .map(e => e.clientX)
 //   .filter(clientX => clientX > 50)
