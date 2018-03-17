@@ -69,7 +69,51 @@ class Observable {
       return subscription;
     });
   }
+
+  //concat two cold observables
+  static concat(...observables) {
+    return new Observable(observer => {
+      //Make a copy of the observables array
+      const observablesCopy = observables.slice();
+
+      // Variable to hold the currentSubscription, this will be returned
+      let currentSubscription = null;
+      const processNextObservable = () => {
+        // Any number of observables is acceptable
+        // Pop one out and subscribe to it
+        const currentObservable = observablesCopy.shift();
+
+        currentSubscription = currentObservable.subscribe({
+          next(value) {
+            observer.next(value);
+          },
+          error(err) {
+            observer.error(err);
+            currentSubscription.unsubscribe();
+          },
+          completed() {
+            // if there are no more observables to iterate through than we are done
+            if (observablesToConcat.length === 0) {
+              observer.completed();
+              currentSubscription.unsubscribe();
+            } else {
+              // there are more observables recursively do the same
+              processNextObservable();
+            }
+          },
+        });
+      };
+      //Begin processing the passed in observables
+      processNextObservable();
+      return {
+        unsubscribe() {
+          currentSubscription.unsubscribe();
+        },
+      };
+    });
+  }
 }
+
 //
 // TEST;
 //
