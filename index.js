@@ -71,10 +71,10 @@ class Observable {
   }
 
   //concat two cold observables
-  static concat(...observables) {
+  static concat() {
     return new Observable(observer => {
-      //Make a copy of the observables array
-      const observablesCopy = observables.slice();
+      //Make a copy of the observables passed in
+      const observablesCopy = arguments.slice(1);
 
       // Variable to hold the currentSubscription, this will be returned
       let currentSubscription = null;
@@ -112,25 +112,33 @@ class Observable {
       };
     });
   }
-}
 
-//
-// TEST;
-//
-// const div = document.querySelector('div');
-//
-// const divClicks = Observable.fromEvent(div, "click");
-// divClicks
-//   .map(e => e.clientX)
-//   .filter(clientX => clientX > 50)
-//   .subscribe({
-//     next(data) {
-//       console.log(data);
-//     },
-//     error(err) {
-//       console.log('there was an err');
-//     },
-//     completed() {
-//       console.log('completed');
-//     },
-//   });
+  // from TEST
+
+  // Observable.from(3).subscribe({
+  //   next(value) {
+  //     console.log(value);
+  //   },
+  // });
+
+  //
+  // TEST;
+  //
+  // const div = document.querySelector('div');
+  //
+  // const divClicks = Observable.fromEvent(div, "click");
+  // divClicks
+  //   .map(e => e.clientX)
+  //   .filter(clientX => clientX > 50)
+  //   .subscribe({
+  //     next(data) {
+  //       console.log(data);
+  //     },
+  //     error(err) {
+  //       console.log('there was an err');
+  //     },
+  //     completed() {
+  //       console.log('completed');
+  //     },
+  // });
+}
